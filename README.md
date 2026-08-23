@@ -2,6 +2,8 @@
 
 A curated index of 50 open-source repositories covering AI tooling, agents, local model hosting, and developer learning resources.
 
+**Visual portfolio atlas:** [github-inventory-2026-08-23.html](github-inventory-2026-08-23.html) | [Markdown inventory](github-inventory-2026-08-23.md)
+
 **Link status:** all 50 URLs were checked with an HTTP request on 2026-08-22. All returned HTTP 200. Six redirect to a new canonical owner (noted with a redirect arrow below). The original links still work, but the new path is the one to bookmark.
 
 **Descriptions** are carried over from the original source graphic and have not been independently verified against each project's own README.
