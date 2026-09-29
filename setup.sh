@@ -6,7 +6,8 @@
 # Usage:
 #   ./setup.sh publish   # create jeffalcomagic8/awesome-50-repos and push the README + CSV
 #   ./setup.sh fork      # fork all 48 unique repos into jeffalcomagic8
-#   ./setup.sh clone     # clone all 48 repos into ./repos/ locally (shallow)
+#   ./setup.sh clone     # clone all repos into ./repos/ locally (shallow)
+#   ./setup.sh fork-pm   # fork only the 6 AI PM workflow repos (#51-56)
 
 set -euo pipefail
 USER_ACCOUNT="jeffalcomagic8"
@@ -33,11 +34,23 @@ case "${1:-}" in
     echo "Published: https://github.com/$USER_ACCOUNT/$LIST_REPO"
     ;;
   fork)
-    echo "This will fork 48 repositories into $USER_ACCOUNT. Several are very large."
+    echo "This will fork every repository in the CSV into $USER_ACCOUNT. Several are very large."
     read -r -p "Continue? [y/N] " ok
     [[ "$ok" == "y" ]] || exit 0
     targets | while read -r url; do
       slug="${url#https://github.com/}"
+      echo "Forking $slug"
+      gh repo fork "$slug" --clone=false || echo "  skipped $slug"
+      sleep 1
+    done
+    ;;
+  fork-pm)
+    tail -n +2 "$CSV" | awk -F',' '$3 == "AI PM Workflow" {print $6}' | while read -r url; do
+      slug="${url#https://github.com/}"
+      name="${slug#*/}"
+      if gh repo view "$USER_ACCOUNT/$name" >/dev/null 2>&1; then
+        echo "Already in $USER_ACCOUNT: $name"; continue
+      fi
       echo "Forking $slug"
       gh repo fork "$slug" --clone=false || echo "  skipped $slug"
       sleep 1
@@ -53,6 +66,6 @@ case "${1:-}" in
     done
     ;;
   *)
-    echo "Usage: $0 {publish|fork|clone}"; exit 1
+    echo "Usage: $0 {publish|fork|fork-pm|clone}"; exit 1
     ;;
 esac
